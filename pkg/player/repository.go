@@ -1,4 +1,4 @@
-package app
+package player
 
 import (
 	"github.com/HazemNoor/card-game/pkg/game"

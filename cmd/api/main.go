@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/HazemNoor/card-game/pkg/app"
+	"github.com/HazemNoor/card-game/pkg/player"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -13,7 +13,7 @@ var address string
 var redisAddress string
 var redisPassword string
 
-var gameApp *app.App
+var gamePlayer *player.Player
 
 func init() {
 	flag.StringVar(&address, "http-address", ":8000", "address to listen to, in the form \"host:port\"")
@@ -23,7 +23,7 @@ func init() {
 }
 
 func main() {
-	gameApp = app.CreateNewApp(redisAddress, redisPassword)
+	gamePlayer = player.CreateNewPlayer(redisAddress, redisPassword)
 	router := mux.NewRouter()
 	router.HandleFunc("/deck", createNewDeckHandler).Methods("PUT")
 	router.HandleFunc("/deck/{deckId}", openDeckHandler).Methods("GET")

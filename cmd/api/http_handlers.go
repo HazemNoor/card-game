@@ -19,7 +19,7 @@ func createNewDeckHandler(w http.ResponseWriter, r *http.Request) {
 
 	cards = strings.FieldsFunc(r.URL.Query().Get("cards"), func(c rune) bool { return c == ',' })
 
-	deck := game.MustDeck(gameApp.CreateNewDeck(shuffled, cards))
+	deck := game.MustDeck(gamePlayer.CreateNewDeck(shuffled, cards))
 
 	payload := struct {
 		DeckId    string `json:"deck_id"`
@@ -38,7 +38,7 @@ func createNewDeckHandler(w http.ResponseWriter, r *http.Request) {
 func openDeckHandler(w http.ResponseWriter, r *http.Request) {
 	deckId := mux.Vars(r)["deckId"]
 
-	payload := game.MustDeck(gameApp.OpenDeck(deckId))
+	payload := game.MustDeck(gamePlayer.OpenDeck(deckId))
 
 	w.WriteHeader(http.StatusOK)
 	must(json.NewEncoder(w).Encode(payload))
@@ -53,7 +53,7 @@ func drawCardHandler(w http.ResponseWriter, r *http.Request) {
 		count = 1
 	}
 
-	payload := game.MustCollection(gameApp.DrawCard(deckId, count))
+	payload := game.MustCollection(gamePlayer.DrawCard(deckId, count))
 
 	w.WriteHeader(http.StatusOK)
 	must(json.NewEncoder(w).Encode(payload))

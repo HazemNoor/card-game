@@ -1,4 +1,4 @@
-package app
+package player
 
 import (
 	"github.com/HazemNoor/card-game/pkg/game"
@@ -7,17 +7,17 @@ import (
 	"testing"
 )
 
-func TestApp_CreateNewDeck(t *testing.T) {
-	testApp := CreateNewAppInMemory()
+func TestPlayer_CreateNewDeck(t *testing.T) {
+	testPlayer := CreateNewPlayerInMemory()
 
-	_, err := testApp.CreateNewDeck(false, []string{"99"})
+	_, err := testPlayer.CreateNewDeck(false, []string{"99"})
 	if err == nil {
-		t.Error("App.CreateNewDeck() should return an error")
+		t.Error("Player.CreateNewDeck() should return an error")
 	}
 
-	got, err := testApp.CreateNewDeck(true, []string{"AS"})
+	got, err := testPlayer.CreateNewDeck(true, []string{"AS"})
 	if got == nil {
-		t.Fatal("App.CreateNewDeck() returned wrong deck")
+		t.Fatal("Player.CreateNewDeck() returned wrong deck")
 	}
 	want := game.MustDeck(game.NewDeck(uuid.New(), true, "AS"))
 
@@ -26,13 +26,13 @@ func TestApp_CreateNewDeck(t *testing.T) {
 	cardsEqual := reflect.DeepEqual(got.GetCards(), want.GetCards())
 
 	if !shuffledEqual || !remainingEqual || !cardsEqual {
-		t.Errorf("App.CreateNewDeck() returned wrong deck")
+		t.Errorf("Player.CreateNewDeck() returned wrong deck")
 	}
 }
 
-func TestApp_DrawCard(t *testing.T) {
-	testApp := CreateNewAppInMemory()
-	deck, _ := testApp.CreateNewDeck(true, []string{"AS"})
+func TestPlayer_DrawCard(t *testing.T) {
+	testPlayer := CreateNewPlayerInMemory()
+	deck, _ := testPlayer.CreateNewDeck(true, []string{"AS"})
 
 	gotCollection, err := deck.DrawCards(1)
 	if err != nil || gotCollection == nil {
@@ -44,16 +44,16 @@ func TestApp_DrawCard(t *testing.T) {
 	wantCollection := game.MustCollection(wantDeck.DrawCards(1))
 
 	if !reflect.DeepEqual(gotCollection, wantCollection) {
-		t.Error("App.DrawCard() returned wrong deck")
+		t.Error("Player.DrawCard() returned wrong deck")
 	}
 }
 
-func TestApp_OpenDeck(t *testing.T) {
-	testApp := CreateNewAppInMemory()
+func TestPlayer_OpenDeck(t *testing.T) {
+	testPlayer := CreateNewPlayerInMemory()
 
-	want, _ := testApp.CreateNewDeck(false, []string{"AS"})
+	want, _ := testPlayer.CreateNewDeck(false, []string{"AS"})
 
-	got, _ := testApp.OpenDeck(want.GetId().String())
+	got, _ := testPlayer.OpenDeck(want.GetId().String())
 
 	if !reflect.DeepEqual(got, want) {
 		t.Error("OpenDeck() returned wrong deck")

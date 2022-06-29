@@ -1,25 +1,25 @@
-package app
+package player
 
 import (
 	"github.com/HazemNoor/card-game/pkg/game"
 	"github.com/google/uuid"
 )
 
-type App struct {
+type Player struct {
 	repo Repository
 }
 
-func NewApp(repository Repository) *App {
-	return &App{repo: repository}
+func NewPlayer(repository Repository) *Player {
+	return &Player{repo: repository}
 }
 
-func (app *App) CreateNewDeck(shuffled bool, cards []string) (*game.Deck, error) {
+func (p *Player) CreateNewDeck(shuffled bool, cards []string) (*game.Deck, error) {
 	deck, err := game.NewDeck(uuid.New(), shuffled, cards...)
 	if err != nil {
 		return nil, err
 	}
 
-	err = app.repo.SaveDeck(deck)
+	err = p.repo.SaveDeck(deck)
 	if err != nil {
 		return nil, err
 	}
@@ -27,13 +27,13 @@ func (app *App) CreateNewDeck(shuffled bool, cards []string) (*game.Deck, error)
 	return deck, nil
 }
 
-func (app *App) OpenDeck(deckId string) (*game.Deck, error) {
+func (p *Player) OpenDeck(deckId string) (*game.Deck, error) {
 	deckUUID, err := uuid.Parse(deckId)
 	if err != nil {
 		return nil, err
 	}
 
-	deck, err := app.repo.GetDeck(deckUUID)
+	deck, err := p.repo.GetDeck(deckUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,8 +41,8 @@ func (app *App) OpenDeck(deckId string) (*game.Deck, error) {
 	return deck, nil
 }
 
-func (app *App) DrawCard(deckId string, n int) (*game.CardCollection, error) {
-	deck, err := app.OpenDeck(deckId)
+func (p *Player) DrawCard(deckId string, n int) (*game.CardCollection, error) {
+	deck, err := p.OpenDeck(deckId)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (app *App) DrawCard(deckId string, n int) (*game.CardCollection, error) {
 		return nil, err
 	}
 
-	err = app.repo.SaveDeck(deck)
+	err = p.repo.SaveDeck(deck)
 	if err != nil {
 		return nil, err
 	}
